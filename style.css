@@ -1,0 +1,260 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #000;
+    color: #fff;
+    font-family: 'Cinzel Decorative', serif;
+    background-image: url('img/fundoelden.webp'); /* Use sua imagem de fundo */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: multiply;
+    background-color: rgba(0, 0, 0, 0.8); /* Fundo mais escuro */
+}
+
+.main-menu {
+    position: relative;
+    text-align: center;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    z-index: 1;
+}
+
+.game-title-container {
+    position: absolute;
+    /* Ajuste para o título ficar BEM ALTO e dominar a tela, como na imagem */
+    top: 10vh; /* Inicia mais alto */
+    width: 98%; /* Aumentado para dar ainda mais espaço ao título */
+    max-width: 1800px; /* Reajustado para acomodar o título em uma linha em telas muito largas, não tão restritivo quanto 1000px */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    box-sizing: border-box;
+    /* Adicionar um efeito de brilho mais sutil no contêiner, simulando a aura da runa */
+    filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.04)); /* Brilho amarelo/dourado bem sutil */
+}
+
+/* O ::before não será mais o brilho primário, será mais um efeito de "vapor" */
+.game-title-container::before {
+    content: '';
+    position: absolute;
+    width: 150%; /* Faz o brilho ser mais largo que o título */
+    height: 150%;
+    border-radius: 50%;
+    /* Reduzi a opacidade e o espalhamento para um brilho mais sutil e atmosférico */
+    box-shadow: 0 0 180px 80px rgba(255, 215, 0, 0.004); /* Ajustado para ser mais suave */
+    animation: circularGlow 20s infinite ease-in-out alternate; /* Mais lento */
+    z-index: -1;
+    transform: scale(0.9);
+}
+
+@keyframes circularGlow {
+    0% {
+        transform: scale(0.9);
+        box-shadow: 0 0 180px 80px rgba(255, 215, 0, 0.004);
+    }
+    50% {
+        transform: scale(1.0);
+        box-shadow: 0 0 280px 120px rgba(255, 215, 0, 0.008);
+    }
+    100% {
+        transform: scale(0.9);
+        box-shadow: 0 0 180px 80px rgba(255, 215, 0, 0.004);
+    }
+}
+
+.game-title {
+    /* O título ELDEN RING na imagem é uma imagem de logo, então precisamos simular o tamanho e a forma com texto */
+    font-size: clamp(3em, 7vw, 5.5em); /* Ajustado para ser menor e mais preciso */
+    white-space: nowrap; /* Impede a quebra de linha */
+    color: #e0d0a0; /* Base dourada mais opaca e envelhecida */
+    text-shadow:
+        0 0 10px rgba(255, 215, 0, 0.8),   /* Brilho principal, mais forte */
+        0 0 25px rgba(255, 215, 0, 0.5),   /* Brilho secundário */
+        0 0 40px rgba(255, 215, 0, 0.3),   /* Brilho difuso */
+        0 0 60px rgba(255, 215, 0, 0.1);   /* Brilho bem espalhado */
+    letter-spacing: 0em; /* Ajuste para o espaçamento mais próximo, como na imagem */
+    font-weight: 700;
+    /* Para simular a textura/contorno do logo */
+    -webkit-text-stroke: 2px rgba(60, 40, 0, 0.6); /* Contorno mais grosso e escuro */
+    text-stroke: 2px rgba(60, 40, 0, 0.6);
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.9)) /* Sombra forte para destacar */
+            drop-shadow(0 0 20px rgba(0, 0, 0, 0.7)); /* Segunda sombra para profundidade */
+}
+
+.menu-and-arrow-container {
+    position: absolute;
+    /* Move o bloco de menu BEM PARA BAIXO, no terço inferior da tela */
+    bottom: 10vh; /* Ajuste para ter o espaço vazio acima dele */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.menu-options {
+    margin-bottom: 30px; /* Aumenta o espaço entre o menu e o botão */
+    padding-bottom: 0;
+}
+
+.menu-item {
+    display: block;
+    color: #808080; /* Cor mais escura para opções inativas */
+    text-decoration: none;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.65em; /* Diminuído para ser mais adequado à referência */
+    font-weight: 400;
+    padding: 1px 0; /* Espaçamento ajustado */
+    letter-spacing: 0.4px; /* Mais espaçamento entre letras */
+    transition: color 0.3s, text-shadow 0.3s, transform 0.2s ease-out;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.8); /* Sombra mais forte para legibilidade */
+}
+
+.menu-item:hover {
+    color: #e0d0a0;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.6),
+                 0 0 20px rgba(255, 215, 0, 0.3);
+    transform: translateX(5px);
+}
+
+.menu-options a:first-child {
+    color: #fff8e1; /* Cor mais clara para o item ativo */
+    font-size: 0.75em; /* Ligeiramente maior que os outros, mas ajustado proporcionalmente */
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8),
+                 0 0 20px rgba(255, 215, 0, 0.4);
+}
+
+/* Ajuste dos atrasos de animação */
+.menu-options a:nth-child(1) { animation-delay: 0.8s; }
+.menu-options a:nth-child(2) { animation-delay: 0.9s; }
+.menu-options a:nth-child(3) { animation-delay: 1.0s; }
+.menu-options a:nth-child(4) { animation-delay: 1.1s; }
+.menu-options a:nth-child(5) { animation-delay: 1.2s; }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.press-any-button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px; /* Mais espaço para separar do menu */
+}
+
+.press-any-button {
+    color: #404040; /* Cor ainda mais escura e discreta */
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.5em; /* Extremamente pequeno */
+    letter-spacing: 2px; /* Mais espaçamento */
+    margin-top: 1px;
+    animation: pulse 2s infinite alternate;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.1; /* Quase invisível no mínimo */
+    }
+    100% {
+        opacity: 0.4; /* Sutilmente visível no máximo */
+    }
+}
+
+.arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 3px solid transparent; /* Seta minúscula */
+    border-right: 3px solid transparent;
+    border-top: 6px solid rgba(80, 80, 80, 0.3); /* Mais escura e sutil */
+    margin-top: 3px;
+    animation: bounce 1.5s infinite alternate;
+}
+
+@keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(2px); /* Pulso bem sutil */
+    }
+}
+
+.footer-left,
+.footer-right {
+    position: absolute;
+    font-size: 0.35em; /* Quase invisível */
+    color: #303030; /* Cor muito escura */
+    padding: 0.5px;
+    line-height: 1.2;
+    text-shadow: none; /* Remover sombra para ser mais discreto */
+}
+
+.footer-left {
+    bottom: 0.2vh; /* Mais próximo da borda */
+    left: 0.2vh;
+    text-align: left;
+}
+
+.footer-right {
+    bottom: 0.2vh; /* Mais próximo da borda */
+    right: 0.2vh;
+    text-align: right;
+}
+
+/* Cursor Místico (sem mudanças no CSS, só no JS se necessário para mais fidelidade) */
+.mystical-cursor {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    border: 1px solid #7a5a07;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3), inset 0 0 5px rgba(255, 215, 0, 0.2),
+                0 0 15px 3px rgba(255, 215, 0, 0.1);
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.mystical-cursor.active {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    animation: rotateGlow 6s infinite linear, pulseBorder 2.5s infinite alternate;
+}
+
+@keyframes rotateGlow {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes pulseBorder {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.3), inset 0 0 5px rgba(255, 215, 0, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), inset 0 0 10px rgba(255, 215, 0, 0.35); /* Ajustado para mais sutil */
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.3), inset 0 0 5px rgba(255, 215, 0, 0.2);
+    }
+}

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elden Ring - Journey Begins</title>
+    <link rel="stylesheet" href="game.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <div class="character-creation-section">
+            <h1>CREATE YOUR CHAMPION</h1>
+
+            <div class="selection-group">
+                <h2>CHOOSE YOUR CLASS</h2>
+                <div class="options-container class-options">
+                    <div class="option-card" data-choice="samurai">
+                        <img src="img/samurai.jpg" alt="Samurai" class="choice-image">
+                        <p class="choice-name">SAMURAI</p>
+                    </div>
+                    <div class="option-card" data-choice="vagabond">
+                        <img src="img/vagabundo.jpg" alt="Vagabond" class="choice-image">
+                        <p class="choice-name">VAGABOND</p>
+                    </div>
+                    <div class="option-card" data-choice="prophet">
+                        <img src="img/profeta.jpg" alt="Prophet" class="choice-image">
+                        <p class="choice-name">PROPHET</p>
+                    </div>
+                    <!-- Adicione mais classes conforme necessário -->
+                </div>
+            </div>
+
+            <div class="selection-group">
+                <h2>CHOOSE YOUR STARTING ITEM</h2>
+                <div class="options-container item-options">
+                    <div class="option-card" data-choice="golden_seed">
+                        <img src="img/goldenseed.jpg" alt="Golden Seed" class="choice-image">
+                        <p class="choice-name">GOLDEN SEED</p>
+                    </div>
+                    <div class="option-card" data-choice="furlcalling_finger_remedy">
+                        <img src="img/remedio.jpg" alt="Furlcalling Finger Remedy" class="choice-image">
+                        <p class="choice-name">FURTCALLING FINGER REMEDY</p>
+                    </div>
+                    <!-- Adicione mais itens conforme necessário -->
+                </div>
+            </div>
+
+            <div class="name-input-group">
+                <h2>ENTER YOUR NAME</h2>
+                <input type="text" id="characterName" placeholder="Tarnished Name" maxlength="20">
+            </div>
+
+            <button id="startGameButton" class="game-button">BEGIN JOURNEY</button>
+        </div>
+
+        <!-- Nova Seção para Carregar Jogo Salvo -->
+        <div class="load-game-section" style="display: none;">
+            <h1>LOAD YOUR JOURNEY</h1>
+            <div class="saved-characters-container" id="savedCharactersContainer">
+                <!-- Cartões de personagens salvos serão inseridos dinamicamente aqui -->
+            </div>
+            <button id="backToCreationButton" class="game-button">BACK TO CHARACTER CREATION</button>
+        </div>
+
+        <div class="cutscene-section">
+            <div class="iframe-wrapper">
+                <iframe id="introCutscene" src="https://www.youtube.com/embed/KNNT_565Bok?si=YLMMvpQPyVZs2lnY&amp;start=3&amp;autoplay=1&amp;controls=0&amp;rel=0&amp;modestbranding=1&amp;showinfo=0&amp;iv_load_policy=3&amp;disablekb=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            </div>
+            <div class="cutscene-overlay"></div>
+            <div id="pressAnyButtonCutscene" class="press-any-button">Pressione qualquer botão para continuar</div>
+        </div>
+
+        <!-- Nova Estrutura da Seção Jogável -->
+        <div class="game-play-section-new" style="display:none;">
+            <div class="top-bar">
+                <div class="player-info-section">
+                    <div class="player-name-class">
+                        <span id="displayPlayerName"></span>
+                        <span id="displayPlayerClass"></span>
+                    </div>
+                    <div class="player-stats">
+                        <div class="health-bar-container">
+                            <div id="playerHealthBar" class="health-bar-fill"></div>
+                        </div>
+                        <p>HP: <span id="playerHP">100</span>/<span id="playerMaxHP">100</span></p>
+                        <p>Level: <span id="playerLevel">1</span></p>
+                    </div>
+                </div>
+                <div class="enemy-info-section">
+                    <p class="enemy-name">Sentinel Esqueleto</p>
+                    <div class="health-bar-container">
+                        <div id="enemyHealthBar" class="health-bar-fill"></div>
+                    </div>
+                    <p>HP: <span id="enemyHP">500</span>/<span id="enemyMaxHP">500</span></p>
+                    <p>Level: <span id="enemyLevel">10</span></p>
+                </div>
+            </div>
+            <div class="main-game-area">
+                <!-- Área principal de exploração/combate -->
+                <img id="playerImage" src="" alt="Your Character" class="game-player-image">
+                <img id="enemyImage" src="img/esqueleto.png" alt="Enemy" class="game-enemy-image">
+            </div>
+            <div class="bottom-bar">
+                <div id="playerDetailedStats">
+                    <img id="playerFullBodyImage" src="" alt="Your Character" class="player-full-body-image">
+                    <p>Nível: <span id="playerDetailedLevel">1</span></p>
+                    <p>HP: <span id="playerDetailedHP">100</span>/<span id="playerDetailedMaxHP">100</span></p>
+                    <p><span id="playerStat1Icon"></span> <span id="playerStat1">2734</span></p>
+                    <p><span id="playerStat2Icon"></span> <span id="playerStat2">760</span></p>
+                    <p><span id="playerStat3Icon">⚡</span> <span id="playerStat3">1412</span></p>
+                </div>
+                <div id="inventorySlotsContainer">
+                    <!-- Slots de Inventário -->
+                    <div class="inventory-slot" data-slot-id="1"></div>
+                    <div class="inventory-slot" data-slot-id="2"></div>
+                    <div class="inventory-slot" data-slot-id="3"></div>
+                    <div class="inventory-slot" data-slot-id="4"></div>
+                    <div class="inventory-slot" data-slot-id="5"></div>
+                    <div class="inventory-slot" data-slot-id="6"></div>
+                    <div class="inventory-slot" data-slot-id="7"></div>
+                    <div class="inventory-slot" data-slot-id="8"></div>
+                    <div class="inventory-slot" data-slot-id="9"></div>
+                    <div class="inventory-slot" data-slot-id="10"></div>
+                    <div class="inventory-slot" data-slot-id="11"></div>
+                    <div class="inventory-slot" data-slot-id="12"></div>
+                    <div class="inventory-slot" data-slot-id="13"></div>
+                    <div class="inventory-slot" data-slot-id="14"></div>
+                    <div class="inventory-slot" data-slot-id="15"></div>
+                    <div class="inventory-slot" data-slot-id="16"></div>
+                    <div class="inventory-slot" data-slot-id="17"></div>
+                    <div class="inventory-slot" data-slot-id="18"></div>
+                </div>
+                <div id="actionButtonsArea">
+                    <button class="game-button">Misturar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html> 

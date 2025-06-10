@@ -1,0 +1,493 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #000;
+    color: #fff;
+    font-family: 'Cinzel Decorative', serif;
+    background-image: url('img/fundoelden.webp'); /* Mesma imagem de fundo da tela inicial */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: multiply;
+    background-color: rgba(0, 0, 0, 0.8); /* Fundo mais escuro */
+    overflow-x: hidden; /* Evita rolagem horizontal indesejada */
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Alinha o conteúdo ao topo do container */
+    width: 95%; /* Aumenta um pouco para ocupar mais espaço */
+    max-width: 1400px; /* Ajuste para o tamanho máximo do container */
+    padding: 30px 20px; /* Mais padding vertical */
+    box-sizing: border-box;
+    text-align: center;
+    min-height: 100vh; /* Garante que o container ocupe pelo menos a altura da tela */
+    position: relative; /* Adicionado para contexto de empilhamento */
+    z-index: 1; /* Z-index base para o container do jogo */
+}
+
+h1 {
+    font-size: 3.2em; /* Ligeiramente maior para destaque */
+    color: gold;
+    margin-bottom: 35px;
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.6); /* Brilho mais intenso */
+}
+
+h2 {
+    font-size: 1.9em;
+    color: #e0d0a0;
+    margin-top: 45px;
+    margin-bottom: 25px;
+    text-shadow: 0 0 6px rgba(255, 215, 0, 0.4);
+}
+
+.selection-group {
+    margin-bottom: 50px; /* Mais espaço entre os grupos de seleção */
+    width: 100%;
+}
+
+.options-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 25px; /* Mais espaço entre os cards */
+}
+
+.option-card {
+    background-color: rgba(30, 30, 30, 0.7); /* Ligeiramente mais opaco */
+    border: 1px solid rgba(120, 90, 0, 0.6); /* Borda mais visível */
+    border-radius: 10px;
+    padding: 20px;
+    width: 160px; /* Ligeiramente maior */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+    position: relative; /* Adicionado para contexto de empilhamento */
+    z-index: 2; /* Z-index para garantir que seja clicável */
+}
+
+.option-card:hover {
+    background-color: rgba(50, 50, 50, 0.9);
+    border-color: gold;
+    transform: translateY(-7px); /* Efeito de hover mais pronunciado */
+    box-shadow: 0 0 18px rgba(255, 215, 0, 0.4); /* Brilho mais intenso */
+}
+
+.option-card.selected {
+    background-color: rgba(70, 70, 0, 0.9); /* Mais opaco */
+    border-color: gold;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.8), inset 0 0 12px rgba(255, 215, 0, 0.6); /* Brilho e sombra mais fortes */
+    transform: scale(1.08); /* Efeito de seleção mais pronunciado */
+}
+
+.choice-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    border: 2px solid rgba(255, 215, 0, 0.3); /* Borda mais visível */
+}
+
+.choice-name {
+    font-size: 1.2em; /* Ligeiramente maior */
+    color: #ddd;
+}
+
+.option-card.selected .choice-name {
+    color: #fff8e1;
+    font-weight: 700;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); /* Sombra para o nome selecionado */
+}
+
+.name-input-group {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+#characterName {
+    background-color: rgba(30, 30, 30, 0.9); /* Mais opaco */
+    border: 2px solid rgba(120, 90, 0, 0.6); /* Borda mais visível */
+    border-radius: 6px;
+    padding: 12px 18px;
+    color: #fff;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.3em; /* Ligeiramente maior */
+    width: 85%;
+    max-width: 350px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#characterName:focus {
+    border-color: gold;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.6); /* Brilho mais intenso */
+}
+
+.game-button {
+    background-color: rgba(120, 80, 0, 0.8); /* Cor base mais forte */
+    color: #fff8e1;
+    border: 2px solid gold;
+    border-radius: 6px;
+    padding: 18px 35px;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.4em; /* Ligeiramente maior */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.game-button:hover {
+    background-color: rgba(180, 120, 0, 0.95); /* Cor mais intensa no hover */
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.9), inset 0 0 8px rgba(255, 215, 0, 0.4); /* Brilho mais forte */
+    transform: translateY(-3px);
+}
+
+.cutscene-section {
+    position: fixed; /* Ocupa a tela inteira */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 1); /* Garante fundo preto total */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Z-index muito alto para garantir que fique acima de tudo */
+    opacity: 0; /* Começa invisível para o fade-in */
+    transition: opacity 2s ease-in-out; /* Duração da transição mais longa */
+    pointer-events: none; /* Não interage até estar visível */
+    visibility: hidden; /* Esconde completamente quando não ativo */
+}
+
+.cutscene-section.active {
+    opacity: 1;
+    pointer-events: all; /* Permite interação quando visível */
+    visibility: visible; /* Mostra quando ativo */
+}
+
+.iframe-wrapper {
+    position: fixed; /* Mudado de absolute para fixed para garantir posicionamento correto */
+    width: 100vw; /* Usando viewport width */
+    height: 100vh; /* Usando viewport height */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    pointer-events: none;
+    overflow: hidden; /* Previne scrollbars */
+}
+
+#introCutscene {
+    position: fixed; /* Mudado de absolute para fixed */
+    top: 0;
+    left: 0;
+    width: 100vw; /* Usando viewport width */
+    height: 100vh; /* Usando viewport height */
+    border: none;
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+    z-index: 5;
+    pointer-events: none;
+    object-fit: cover; /* Garante que o vídeo cubra toda a área */
+}
+
+.cutscene-overlay {
+    position: fixed; /* Mudado de absolute para fixed */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: transparent;
+    z-index: 100000;
+    pointer-events: all;
+}
+
+#pressAnyButtonCutscene {
+    position: fixed; /* Mudado de absolute para fixed */
+    bottom: 8vh;
+    left: 50%;
+    transform: translateX(-50%); /* Centraliza horizontalmente */
+    color: rgba(64, 64, 64, 0.7);
+    font-size: 0.9em;
+    letter-spacing: 1.5px;
+    animation: pulse 2.5s infinite alternate ease-in-out;
+    z-index: 100001;
+    pointer-events: none;
+    white-space: nowrap; /* Evita quebra de linha */
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 0.1;
+    }
+}
+
+.cutscene-placeholder-text {
+    display: none;
+}
+
+.game-play-section {
+    display: none; /* Hidden by default */
+    margin-top: 50px;
+    color: #fff;
+    font-size: 1.5em; /* Tamanho de fonte para a seção de jogo */
+    line-height: 1.6;
+}
+
+/* Novos estilos para a seção jogável */
+.game-play-section-new {
+    display: flex; /* Usa flexbox para layout das sub-seções */
+    flex-direction: column; /* Organiza as sub-seções verticalmente */
+    width: 100vw; /* Ocupa a largura total da viewport */
+    height: 100vh; /* Ocupa a altura total da viewport */
+    position: fixed; /* Fixa na tela */
+    top: 0;
+    left: 0;
+    z-index: 1; /* Garante que fique abaixo da cutscene, mas acima do fundo */
+    background-color: rgba(0, 0, 0, 0.9); /* Fundo escuro sutil */
+    overflow: hidden; /* Evita barras de rolagem indesejadas */
+}
+
+.top-bar {
+    height: 10vh;
+    background-color: rgba(30, 30, 30, 0.9);
+    border-bottom: 2px solid gold;
+    display: flex;
+    justify-content: space-between; /* Espaça os elementos do jogador e inimigo */
+    align-items: center;
+    color: gold;
+    font-size: 1.5em;
+    padding: 0 20px;
+    box-sizing: border-box;
+    width: 100%; /* Garante que a barra superior ocupe toda a largura */
+}
+
+.player-info-section, .enemy-info-section {
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo sutil para as seções de info */
+    border: 1px solid rgba(120, 90, 0, 0.6); /* Borda dourada discreta */
+    border-radius: 8px;
+    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alinha o texto à esquerda */
+    min-width: 200px; /* Garante um tamanho mínimo */
+}
+
+.player-info-section {
+    margin-right: 20px; /* Espaço entre as seções */
+}
+
+.enemy-info-section {
+    margin-left: 20px; /* Espaço entre as seções */
+    align-items: flex-end; /* Alinha o texto do inimigo à direita */
+}
+
+.player-name-class span, .enemy-name {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #fff8e1;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+    margin-bottom: 5px;
+}
+
+.player-stats p, .enemy-info-section p {
+    font-size: 0.9em;
+    color: #ccc;
+    margin: 2px 0; /* Espaçamento menor para as linhas de stats */
+}
+
+/* Estilos para as barras de vida */
+.health-bar-container {
+    width: 150px; /* Largura da barra de vida */
+    height: 15px; /* Altura da barra de vida */
+    background-color: rgba(50, 50, 50, 0.8); /* Cor do fundo da barra (vazio) */
+    border: 1px solid rgba(120, 90, 0, 0.8); /* Borda da barra */
+    border-radius: 5px; /* Bordas arredondadas */
+    overflow: hidden; /* Garante que o preenchimento não saia das bordas */
+    position: relative;
+    margin-bottom: 5px; /* Espaçamento abaixo da barra */
+}
+
+.health-bar-fill {
+    height: 100%;
+    width: 100%; /* Largura inicial, será controlada por JS */
+    background-color: #4CAF50; /* Cor do preenchimento da barra (verde) */
+    transition: width 0.5s ease-in-out; /* Animação suave para mudança de HP */
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Ajustes para alinhar a barra de vida do inimigo à direita */
+.enemy-info-section .health-bar-container {
+    align-self: flex-end; /* Alinha a barra de vida à direita dentro da seção do inimigo */
+}
+
+.main-game-area {
+    flex-grow: 1;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: space-around; /* Espaça o jogador e o inimigo */
+    align-items: flex-end; /* Alinha o conteúdo à parte inferior para simular o chão */
+    color: #fff;
+    font-size: 2em;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    background-image: url('img/fundoelden.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: multiply;
+}
+
+/* Estilos para as imagens do jogador e inimigo na área de jogo principal */
+.game-player-image,
+.game-enemy-image {
+    width: 250px; /* Tamanho do personagem/inimigo */
+    height: auto; /* Mantém a proporção */
+    object-fit: contain;
+    margin-bottom: 20px; /* Eleva um pouco do "chão" */
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8)); /* Sombra para destaque */
+}
+
+/* Ajuste para a imagem do jogador, que ainda tem o ID #playerImage */
+#playerImage {
+    width: 250px;
+    height: auto;
+    object-fit: contain;
+    border: none; /* Remove a borda circular da seção de criação */
+    border-radius: 0; /* Remove o arredondamento */
+    box-shadow: none; /* Remove a sombra da seção de criação */
+}
+
+.bottom-bar {
+    height: 25vh;
+    background-color: rgba(30, 30, 30, 0.9);
+    border-top: 2px solid gold;
+    display: flex;
+    justify-content: space-around; /* Distribui os elementos horizontalmente */
+    align-items: center;
+    color: gold;
+    font-size: 1.5em;
+    padding: 0 20px;
+    box-sizing: border-box;
+    width: 100%; /* Garante que a barra inferior ocupe toda a largura */
+}
+
+#playerDetailedStats {
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(120, 90, 0, 0.6);
+    border-radius: 8px;
+    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza itens horizontalmente */
+    justify-content: flex-start; /* Alinha ao topo verticalmente */
+    min-width: 220px;
+    color: #fff8e1;
+    font-size: 0.9em;
+}
+
+.player-full-body-image {
+    width: 120px; /* Tamanho da imagem do personagem */
+    height: 120px;
+    border: 2px solid gold; /* Borda dourada */
+    border-radius: 50%; /* Torna a imagem circular */
+    object-fit: cover;
+    margin-bottom: 10px; /* Espaço abaixo da imagem */
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+}
+
+#playerDetailedStats p {
+    margin: 2px 0; /* Espaçamento entre as linhas de stats */
+    color: #ccc;
+    font-size: 0.85em;
+}
+
+#playerDetailedStats p span {
+    color: #fff8e1;
+    font-weight: bold;
+}
+
+/* Estilos para os ícones das stats, se forem imagens */
+#playerDetailedStats p span[id$="Icon"] {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+/* Exemplos de ícones (apenas para referência visual, não serão aplicados agora) */
+/* #playerStat1Icon { background-image: url('img/icon-hp.png'); } */
+/* #playerStat2Icon { background-image: url('img/icon-mana.png'); } */
+/* #playerStat3Icon { background-image: url('img/icon-stamina.png'); } */
+
+#inventorySlotsContainer {
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(120, 90, 0, 0.6);
+    border-radius: 8px;
+    padding: 10px;
+    min-width: 400px; /* Largura mínima para o inventário */
+    display: grid;
+    grid-template-columns: repeat(6, 60px); /* Grid para 6 colunas de slots */
+    grid-template-rows: repeat(3, 60px); /* Grid para 3 linhas de slots */
+    gap: 5px; /* Espaço entre os slots */
+}
+
+/* Estilos para os slots de inventário individuais */
+.inventory-slot {
+    width: 60px; /* Largura do slot */
+    height: 60px; /* Altura do slot */
+    background-color: rgba(50, 50, 50, 0.8); /* Fundo do slot */
+    border: 1px solid rgba(120, 90, 0, 0.6); /* Borda do slot */
+    border-radius: 5px; /* Bordas arredondadas */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Garante que o conteúdo não saia do slot */
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.inventory-slot:hover {
+    background-color: rgba(70, 70, 70, 0.9);
+    border-color: gold;
+}
+
+#actionButtonsArea {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Ajuste para o botão 'Misturar' dentro da área de ações */
+#actionButtonsArea .game-button {
+    margin-top: 0; /* Remove margem superior padrão do game-button */
+    font-size: 1em;
+    padding: 10px 20px;
+} 
