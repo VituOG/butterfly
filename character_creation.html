@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elden Ring - Create Your Champion</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <div class="character-creation-section">
+            <h1>CREATE YOUR CHAMPION</h1>
+
+            <div class="selection-group">
+                <h2>CHOOSE YOUR CLASS</h2>
+                <div class="options-container class-options">
+                    <div class="option-card" data-choice="samurai">
+                        <img src="img/samurai.jpg" alt="Samurai" class="choice-image">
+                        <p class="choice-name">SAMURAI</p>
+                    </div>
+                    <div class="option-card" data-choice="vagabaond">
+                        <img src="img/vagabundo.jpg" alt="Vagabond" class="choice-image">
+                        <p class="choice-name">VAGABOND</p>
+                    </div>
+                    <div class="option-card" data-choice="prophet">
+                        <img src="img/profeta.jpg" alt="Prophet" class="choice-image">
+                        <p class="choice-name">PROPHET</p>
+                    </div>
+                    <!-- Adicione mais classes conforme necessário -->
+                </div>
+            </div>
+
+            <div class="selection-group">
+                <h2>CHOOSE YOUR STARTING ITEM</h2>
+                <div class="options-container item-options">
+                    <div class="option-card" data-choice="golden_seed">
+                        <img src="img/goldenseed.jpg" alt="Golden Seed" class="choice-image">
+                        <p class="choice-name">GOLDEN SEED</p>
+                    </div>
+                    <div class="option-card" data-choice="furlcalling_finger_remedy">
+                        <img src="img/remedio.jpg" alt="Furlcalling Finger Remedy" class="choice-image">
+                        <p class="choice-name">FURTCALLING FINGER REMEDY</p>
+                    </div>
+                    <!-- Adicione mais itens conforme necessário -->
+                </div>
+            </div>
+
+            <div class="name-input-group">
+                <h2>ENTER YOUR NAME</h2>
+                <input type="text" id="characterName" placeholder="Tarnished Name" maxlength="20">
+            </div>
+
+            <button id="startGameButton" class="game-button">BEGIN JOURNEY</button>
+        </div>
+
+        <!-- Nova Seção para Carregar Jogo Salvo -->
+        <div class="load-game-section" style="display: none;">
+            <h1>LOAD YOUR JOURNEY</h1>
+            <div class="saved-characters-container" id="savedCharactersContainer">
+                <!-- Cartões de personagens salvos serão inseridos dinamicamente aqui -->
+            </div>
+            <button id="backToCreationButton" class="game-button">BACK TO CHARACTER CREATION</button>
+        </div>
+    </div>
+
+    <script src="character_creation.js"></script>
+</body>
+</html> 

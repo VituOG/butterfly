@@ -1,0 +1,53 @@
+body {
+    margin: 0;
+    overflow-y: auto; /* Permite rolagem vertical */
+    overflow-x: hidden; /* Mantém a rolagem horizontal desativada */
+    display: flex;
+    flex-direction: column; /* Conteúdo empilhado verticalmente */
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    background-color: #000; /* Fundo preto sólido */
+    color: #fff;
+    font-family: 'Cinzel Decorative', serif;
+    position: relative; /* Necessário para o pseudo-elemento */
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('img/fundoelden.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.001; /* Opacidade extremamente sutil para a imagem de fundo */
+    filter: brightness(0.005) contrast(1.2); /* Brilho mínimo para ser quase imperceptível */
+    z-index: -1; /* Coloca o pseudo-elemento atrás do conteúdo */
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column; /* Conteúdo empilhado verticalmente */
+    align-items: center; /* Centraliza o conteúdo horizontalmente */
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto; /* Permite rolagem apenas para o conteúdo dentro do container */
+    z-index: 2; /* Garante que o container esteja acima do fundo */
+}
+
+.character-creation-section,
+.load-game-section {
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo translúcido para as seções */
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    width: 90%;
+    max-width: 800px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    margin-top: 0; /* Removendo o margin-top */
+    margin-bottom: 0; /* Removendo o margin-bottom */
+    z-index: 3;
+}

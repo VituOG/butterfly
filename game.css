@@ -1,18 +1,20 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* Garante 100% da altura da viewport */
+    width: 100vw;  /* Garante 100% da largura da viewport */
+    overflow: hidden; /* Controla o overflow geral, evita scroll da página */
+}
+
 body {
     margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #000;
+    /* Removendo flexbox do body para evitar centralização indesejada */
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
     color: #fff;
     font-family: 'Cinzel Decorative', serif;
-    background-image: url('img/fundoelden.webp'); /* Mesma imagem de fundo da tela inicial */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-blend-mode: multiply;
-    background-color: rgba(0, 0, 0, 0.8); /* Fundo mais escuro */
+    overflow: hidden; /* Controla o overflow geral do body, evita scroll da página */
     overflow-x: hidden; /* Evita rolagem horizontal indesejada */
 }
 
@@ -20,15 +22,18 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* Alinha o conteúdo ao topo do container */
-    width: 95%; /* Aumenta um pouco para ocupar mais espaço */
-    max-width: 1400px; /* Ajuste para o tamanho máximo do container */
-    padding: 30px 20px; /* Mais padding vertical */
+    justify-content: flex-start;
+    width: 100vw; /* Garante 100% da largura da viewport */
+    height: 100vh; /* Garante 100% da altura da viewport */
+    max-width: none;
+    padding: 0;
     box-sizing: border-box;
     text-align: center;
-    min-height: 100vh; /* Garante que o container ocupe pelo menos a altura da tela */
-    position: relative; /* Adicionado para contexto de empilhamento */
-    z-index: 1; /* Z-index base para o container do jogo */
+    position: absolute; /* Usar absolute para forçar a ocupação da tela inteira */
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-color: black;
 }
 
 h1 {
@@ -255,239 +260,697 @@ h2 {
     line-height: 1.6;
 }
 
-/* Novos estilos para a seção jogável */
+/* Nova Estrutura da Seção Jogável */
 .game-play-section-new {
-    display: flex; /* Usa flexbox para layout das sub-seções */
-    flex-direction: column; /* Organiza as sub-seções verticalmente */
-    width: 100vw; /* Ocupa a largura total da viewport */
-    height: 100vh; /* Ocupa a altura total da viewport */
-    position: fixed; /* Fixa na tela */
-    top: 0;
-    left: 0;
-    z-index: 1; /* Garante que fique abaixo da cutscene, mas acima do fundo */
-    background-color: rgba(0, 0, 0, 0.9); /* Fundo escuro sutil */
-    overflow: hidden; /* Evita barras de rolagem indesejadas */
-}
-
-.top-bar {
-    height: 10vh;
-    background-color: rgba(30, 30, 30, 0.9);
-    border-bottom: 2px solid gold;
-    display: flex;
-    justify-content: space-between; /* Espaça os elementos do jogador e inimigo */
-    align-items: center;
-    color: gold;
-    font-size: 1.5em;
-    padding: 0 20px;
-    box-sizing: border-box;
-    width: 100%; /* Garante que a barra superior ocupe toda a largura */
-}
-
-.player-info-section, .enemy-info-section {
-    background-color: rgba(0, 0, 0, 0.7); /* Fundo sutil para as seções de info */
-    border: 1px solid rgba(120, 90, 0, 0.6); /* Borda dourada discreta */
-    border-radius: 8px;
-    padding: 10px 15px;
+    width: 100%;
+    height: 100%; /* Garante que ocupe a altura total do game-container */
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Alinha o texto à esquerda */
-    min-width: 200px; /* Garante um tamanho mínimo */
+    justify-content: space-between;
+    align-items: center;
+    position: relative; /* Mantém relative para elementos internos se posicionarem */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-image 2s ease-in-out;
+}
+
+.hud-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 1000;
+    pointer-events: none; /* Não interage com os elementos da HUD */
+    height: auto; /* Permite que a altura se ajuste ao conteúdo */
 }
 
 .player-info-section {
-    margin-right: 20px; /* Espaço entre as seções */
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    pointer-events: auto;
+}
+
+.player-name-class {
+    display: flex;
+    gap: 10px;
+    font-size: 1.2em;
+    color: gold;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+    margin-bottom: 10px;
+}
+
+.player-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.estus-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.estus-flasks {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.estus-flask {
+    width: 20px;
+    height: 30px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    position: relative;
+}
+
+.health-bar-container,
+.mana-bar-container,
+.stamina-bar-container {
+    width: 200px;
+    height: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    padding-left: 30px; /* Espaço para o ícone */
+}
+
+.health-bar-fill {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, #ff0000, #ff3333);
+    transition: width 0.3s ease;
+}
+
+.mana-bar-fill {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, #0066ff, #3399ff);
+    transition: width 0.3s ease;
+}
+
+.stamina-bar-fill {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, #ffcc00, #ffdd33);
+    transition: width 0.3s ease;
+}
+
+.stat-icon {
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    object-fit: contain; /* Garante que a imagem se ajuste sem distorcer */
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+    pointer-events: auto; /* Permite interação se necessário, mas está em hud-container */
 }
 
 .enemy-info-section {
-    margin-left: 20px; /* Espaço entre as seções */
-    align-items: flex-end; /* Alinha o texto do inimigo à direita */
+    display: none !important; /* Força a ocultação da seção do inimigo por padrão */
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    flex-direction: column;
+    align-items: flex-end;
+    pointer-events: auto;
 }
 
-.player-name-class span, .enemy-name {
+.enemy-name {
     font-size: 1.2em;
-    font-weight: bold;
-    color: #fff8e1;
+    color: #e0d0a0;
     text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
     margin-bottom: 5px;
 }
 
-.player-stats p, .enemy-info-section p {
-    font-size: 0.9em;
-    color: #ccc;
-    margin: 2px 0; /* Espaçamento menor para as linhas de stats */
-}
-
-/* Estilos para as barras de vida */
-.health-bar-container {
-    width: 150px; /* Largura da barra de vida */
-    height: 15px; /* Altura da barra de vida */
-    background-color: rgba(50, 50, 50, 0.8); /* Cor do fundo da barra (vazio) */
-    border: 1px solid rgba(120, 90, 0, 0.8); /* Borda da barra */
-    border-radius: 5px; /* Bordas arredondadas */
-    overflow: hidden; /* Garante que o preenchimento não saia das bordas */
-    position: relative;
-    margin-bottom: 5px; /* Espaçamento abaixo da barra */
-}
-
-.health-bar-fill {
-    height: 100%;
-    width: 100%; /* Largura inicial, será controlada por JS */
-    background-color: #4CAF50; /* Cor do preenchimento da barra (verde) */
-    transition: width 0.5s ease-in-out; /* Animação suave para mudança de HP */
+.runes-counter {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 20px;
+    right: 250px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    pointer-events: auto;
 }
 
-/* Ajustes para alinhar a barra de vida do inimigo à direita */
-.enemy-info-section .health-bar-container {
-    align-self: flex-end; /* Alinha a barra de vida à direita dentro da seção do inimigo */
+.runes-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+#runesAmount {
+    color: #ffd700;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+}
+
+.status-effects {
+    position: absolute;
+    top: 20px;
+    left: 250px;
+    display: flex;
+    gap: 10px;
+    pointer-events: auto;
+}
+
+.status-slot {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.status-slot img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
 }
 
 .main-game-area {
-    flex-grow: 1;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: space-around; /* Espaça o jogador e o inimigo */
-    align-items: flex-end; /* Alinha o conteúdo à parte inferior para simular o chão */
-    color: #fff;
-    font-size: 2em;
-    text-align: center;
-    padding: 20px;
-    box-sizing: border-box;
-    background-image: url('img/fundoelden.webp');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-blend-mode: multiply;
+    position: relative; /* Mantém relative para elementos internos se posicionarem */
+    width: 100%;
+    height: 100%; /* Garante que ocupe 100% da altura */
+    overflow: hidden;
+    background-color: #000;
 }
 
-/* Estilos para as imagens do jogador e inimigo na área de jogo principal */
+.main-game-area.active {
+    display: block;
+}
+
 .game-player-image,
 .game-enemy-image {
-    width: 250px; /* Tamanho do personagem/inimigo */
-    height: auto; /* Mantém a proporção */
+    position: absolute;
+    bottom: 0;
+    height: 70%;
     object-fit: contain;
-    margin-bottom: 20px; /* Eleva um pouco do "chão" */
-    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8)); /* Sombra para destaque */
 }
 
-/* Ajuste para a imagem do jogador, que ainda tem o ID #playerImage */
 #playerImage {
-    width: 250px;
-    height: auto;
-    object-fit: contain;
-    border: none; /* Remove a borda circular da seção de criação */
-    border-radius: 0; /* Remove o arredondamento */
-    box-shadow: none; /* Remove a sombra da seção de criação */
+    left: 15%;
+}
+
+#enemyImage {
+    right: 15%;
 }
 
 .bottom-bar {
-    height: 25vh;
-    background-color: rgba(30, 30, 30, 0.9);
-    border-top: 2px solid gold;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px 20px;
     display: flex;
-    justify-content: space-around; /* Distribui os elementos horizontalmente */
+    justify-content: space-between;
     align-items: center;
-    color: gold;
-    font-size: 1.5em;
-    padding: 0 20px;
     box-sizing: border-box;
-    width: 100%; /* Garante que a barra inferior ocupe toda a largura */
+    border-top: 1px solid rgba(255, 215, 0, 0.3);
+    pointer-events: auto;
 }
 
 #playerDetailedStats {
-    background-color: rgba(0, 0, 0, 0.7);
-    border: 1px solid rgba(120, 90, 0, 0.6);
-    border-radius: 8px;
-    padding: 10px 15px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centraliza itens horizontalmente */
-    justify-content: flex-start; /* Alinha ao topo verticalmente */
-    min-width: 220px;
-    color: #fff8e1;
+    align-items: flex-start;
+    color: #fff;
     font-size: 0.9em;
 }
 
-.player-full-body-image {
-    width: 120px; /* Tamanho da imagem do personagem */
-    height: 120px;
-    border: 2px solid gold; /* Borda dourada */
-    border-radius: 50%; /* Torna a imagem circular */
-    object-fit: cover;
-    margin-bottom: 10px; /* Espaço abaixo da imagem */
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
-}
-
 #playerDetailedStats p {
-    margin: 2px 0; /* Espaçamento entre as linhas de stats */
-    color: #ccc;
-    font-size: 0.85em;
+    margin: 2px 0;
 }
 
 #playerDetailedStats p span {
-    color: #fff8e1;
+    color: #ffd700;
     font-weight: bold;
 }
 
-/* Estilos para os ícones das stats, se forem imagens */
-#playerDetailedStats p span[id$="Icon"] {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    vertical-align: middle;
-    margin-right: 5px;
-}
-
-/* Exemplos de ícones (apenas para referência visual, não serão aplicados agora) */
-/* #playerStat1Icon { background-image: url('img/icon-hp.png'); } */
-/* #playerStat2Icon { background-image: url('img/icon-mana.png'); } */
-/* #playerStat3Icon { background-image: url('img/icon-stamina.png'); } */
-
 #inventorySlotsContainer {
-    background-color: rgba(0, 0, 0, 0.7);
-    border: 1px solid rgba(120, 90, 0, 0.6);
-    border-radius: 8px;
-    padding: 10px;
-    min-width: 400px; /* Largura mínima para o inventário */
-    display: grid;
-    grid-template-columns: repeat(6, 60px); /* Grid para 6 colunas de slots */
-    grid-template-rows: repeat(3, 60px); /* Grid para 3 linhas de slots */
-    gap: 5px; /* Espaço entre os slots */
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
 }
 
-/* Estilos para os slots de inventário individuais */
 .inventory-slot {
-    width: 60px; /* Largura do slot */
-    height: 60px; /* Altura do slot */
-    background-color: rgba(50, 50, 50, 0.8); /* Fundo do slot */
-    border: 1px solid rgba(120, 90, 0, 0.6); /* Borda do slot */
-    border-radius: 5px; /* Bordas arredondadas */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden; /* Garante que o conteúdo não saia do slot */
-    transition: background-color 0.2s, border-color 0.2s;
+    width: 60px;
+    height: 60px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    transition: all 0.2s ease;
 }
 
 .inventory-slot:hover {
-    background-color: rgba(70, 70, 70, 0.9);
-    border-color: gold;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
 }
 
-#actionButtonsArea {
+/* Efeito de cura visual */
+.heal-effect {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(255, 255, 0, 0.5) 0%, rgba(255, 255, 0, 0) 70%);
+    border-radius: 50%;
+    animation: healPulse 1s forwards;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+}
+
+@keyframes healPulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* Estilos para a nova overlay de apresentação de cena */
+.scene-presentation-overlay {
+    position: absolute; /* Deve ser absolute para sobrepor */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end; /* Alinha o conteúdo (caixa de diálogo e escolhas) na parte inferior */
     align-items: center;
+    z-index: 10; /* Garante que fique acima do gameplay principal */
+    background-color: rgba(0, 0, 0, 0); /* Torna a overlay transparente para mostrar o cenário */
+    transition: opacity 1.5s ease-in-out; /* Transição mais lenta para o fade-out */
+    pointer-events: all; /* Permite interações inicialmente */
 }
 
-/* Ajuste para o botão 'Misturar' dentro da área de ações */
-#actionButtonsArea .game-button {
-    margin-top: 0; /* Remove margem superior padrão do game-button */
-    font-size: 1em;
-    padding: 10px 20px;
+.scene-presentation-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.scene-box {
+    position: relative;
+    width: 80%; /* Largura da caixa do cenário */
+    max-width: 900px;
+    height: auto; /* Permite que a altura se ajuste ao conteúdo */
+    min-height: 400px; /* Altura mínima para a caixa */
+    max-height: 80vh; /* Altura máxima baseada na viewport, permitindo rolagem se exceder */
+    background-color: transparent; /* Fundo da caixa, agora completamente transparente */
+    border: 2px solid gold;
+    border-radius: 8px;
+    overflow: auto; /* Permite rolagem no próprio scene-box se o conteúdo for muito grande */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    padding: 15px; /* Slightly reduced padding */
+}
+
+.scene-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1; /* Abaixo do texto e das escolhas */
+    background-color: transparent;
+}
+
+.scene-box .scene-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 30%, rgba(0, 0, 0, 0) 100%);
+    z-index: -1; /* Entre o background e o conteúdo */
+}
+
+.scene-box .scene-content {
+    position: relative;
+    z-index: 1; /* Sobre o overlay */
+    color: #fff8e1;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.2em;
+    text-align: center;
+    padding: 10px; /* Consistent inner padding */
+    margin-bottom: 0;
+    line-height: 1.8; /* Increased line-height for better spacing */
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+    white-space: pre-wrap; /* Ensures line breaks are handled */
+    word-wrap: break-word; /* Breaks long words */
+    overflow: visible; /* Content flows out, parent handles scroll */
+    box-sizing: border-box; /* Includes padding in total size */
+    flex-grow: 1; /* Takes available space */
+    display: flex;
+    flex-direction: column;
+    height: auto;
+}
+
+.scene-box .scene-text {
+    font-size: 1.2em;
+    color: #fff;
+    line-height: 1.6;
+    white-space: pre-wrap; /* Mantém quebras de linha e espaços */
+    overflow: hidden; /* Esconde o texto que excede o container */
+    border-right: .15em solid orange; /* Cursor piscante */
+    white-space: nowrap; /* Impede quebra de linha inicial, controlada por JS */
+    animation: 
+        typing 3.5s steps(40, end),
+        blink-caret .75s step-end infinite;
+    padding-right: .15em; /* Espaço para o cursor */
+}
+
+.scene-box .scene-choices {
+    display: flex;
+    flex-direction: row;
+    gap: 20px; /* Espaço entre os botões de escolha */
+    justify-content: center;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 2; /* Acima do background da cena */
+}
+
+.choice-button {
+    background-color: rgba(60, 40, 0, 0.7);
+    color: #fff8e1;
+    border: 1px solid gold;
+    border-radius: 5px;
+    padding: 12px 25px;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+}
+
+.choice-button:hover {
+    background-color: rgba(90, 60, 0, 0.9);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+    transform: translateY(-3px);
+}
+
+/* Ajustes para garantir que main-game-area e bottom-bar fiquem ocultas no início */
+.game-play-section-new .main-game-area, 
+.game-play-section-new .bottom-bar {
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+    pointer-events: none;
+}
+
+.game-play-section-new .main-game-area.active, 
+.game-play-section-new .bottom-bar.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Nova caixa de diálogo (dialogue-box) */
+.dialogue-box {
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo semi-transparente para a caixa de diálogo */
+    border: 1px solid rgba(255, 215, 0, 0.4); /* Borda mais suave */
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 20px; /* Mais espaço da parte inferior da tela */
+    max-width: 70%; /* Largura máxima da caixa de diálogo */
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    position: relative;
+    z-index: 2; /* Acima do background da cena */
+    overflow-y: auto; /* Permite rolagem vertical se o texto for muito longo */
+    max-height: 200px; /* Altura máxima para a caixa de diálogo */
+}
+
+.dialogue-box .scene-text {
+    white-space: pre-wrap; /* Essencial para quebras de linha com \n */
+    word-wrap: break-word; /* Quebra palavras longas */
+    display: inline-block; /* Para o efeito de digitação */
+    margin: 0;
+    letter-spacing: .05em;
+    border-right: .15em solid orange; /* Cursor de digitação */
+    animation: blink-caret .75s step-end infinite; /* Animação do cursor */
+    overflow: hidden; /* Esconde texto que ainda não foi digitado */
+}
+
+/* Re-adicionando keyframes para o cursor de digitação */
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: orange; }
+}
+
+/* Estilos para as escolhas de cena */
+.scene-choices {
+    display: flex;
+    flex-direction: row;
+    gap: 20px; /* Espaço entre os botões de escolha */
+    justify-content: center;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 2; /* Acima do background da cena */
+}
+
+/* Game Environment Styles */
+.game-environment {
+    position: relative;
+    width: 100%;
+    height: 100%; /* Garante que ocupe 100% da altura */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Environment Layers */
+.environment-background {
+    position: absolute; /* Para preencher o game-environment */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.environment-interactive {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+.environment-characters {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+}
+
+.environment-effects {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 4;
+    pointer-events: none;
+}
+
+/* Collision Objects */
+.collision-object {
+    position: absolute;
+    background-color: rgba(255, 0, 0, 0.2); /* Semi-transparent red for debugging */
+    pointer-events: none; /* Let the game handle collisions */
+}
+
+/* Interactive Objects */
+.interactive-object {
+    position: absolute;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.interactive-object:hover {
+    transform: scale(1.05);
+}
+
+.object-sprite {
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.interaction-prompt {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.interactive-object:hover .interaction-prompt {
+    opacity: 1;
+}
+
+/* Enemy Spawn Points */
+.enemy-spawn {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(255, 0, 0, 0.1); /* Very faint red for debugging */
+    pointer-events: none;
+}
+
+/* Decorative Objects */
+.decorative-object {
+    position: absolute;
+    pointer-events: none;
+}
+
+/* Character Styles */
+.game-player-image {
+    position: absolute;
+    width: 64px; /* Adjust based on your sprite size */
+    height: 64px;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+
+.enemy-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+/* Effects */
+.environment-effects::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, 
+        transparent 0%, 
+        rgba(0, 0, 0, 0.2) 50%,
+        rgba(0, 0, 0, 0.4) 100%);
+    pointer-events: none;
+    mix-blend-mode: multiply;
+    z-index: 4;
+}
+
+/* Fog Effects */
+.fog-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.fog-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300%;
+    height: 100%;
+    background: url('img/fog.png') repeat-x;
+    background-size: auto 100%;
+    opacity: 0.4;
+    animation: fog-move linear infinite;
+}
+
+.fog-layer-1 {
+    animation-duration: 60s;
+    opacity: 0.3;
+    filter: blur(3px);
+}
+
+.fog-layer-2 {
+    animation-duration: 40s;
+    opacity: 0.2;
+    filter: blur(2px);
+    animation-delay: -20s;
+}
+
+.fog-layer-3 {
+    animation-duration: 50s;
+    opacity: 0.25;
+    filter: blur(4px);
+    animation-delay: -35s;
+}
+
+@keyframes fog-move {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Ajuste do background para melhor integração com a névoa */
+.environment-background {
+    filter: brightness(0.8) contrast(1.1);
 } 

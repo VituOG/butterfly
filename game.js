@@ -165,7 +165,7 @@ const classImages = {
 const classImagesFullBody = {
     samurai: 'img/samurai.jpg', // Usando a mesma por enquanto, ajustar conforme necessário
     vagabond: 'img/vagabundo.jpg',
-    prophet: 'img/profeta.jpg',
+    prophet: 'img/prophet.jpg',
 };
 
 // Função para lidar com a seleção de opções (classe ou item)
@@ -297,4 +297,257 @@ document.addEventListener('DOMContentLoaded', () => {
         cutsceneSection.style.display = 'none';
         gamePlaySection.style.display = 'none'; // Oculta a nova seção também por padrão
     }
+});
+
+// Sistema de Estus
+let estusFlasks = 3;
+let maxEstusFlasks = 3;
+
+function useEstus() {
+    if (estusFlasks > 0) {
+        const flask = document.querySelector(`.estus-flask:nth-child(${estusFlasks})`);
+        flask.classList.add('used');
+        estusFlasks--;
+        
+        // Efeito de cura
+        const healthBar = document.getElementById('playerHealthBar');
+        const currentHealth = parseInt(document.getElementById('playerDetailedHP').textContent);
+        const maxHealth = parseInt(document.getElementById('playerDetailedMaxHP').textContent);
+        const healAmount = Math.floor(maxHealth * 0.4); // Cura 40% do HP máximo
+        
+        let newHealth = Math.min(currentHealth + healAmount, maxHealth);
+        document.getElementById('playerDetailedHP').textContent = newHealth;
+        healthBar.style.width = `${(newHealth / maxHealth) * 100}%`;
+        
+        // Efeito visual de cura
+        const healEffect = document.createElement('div');
+        healEffect.className = 'heal-effect';
+        document.querySelector('.player-stats').appendChild(healEffect);
+        setTimeout(() => healEffect.remove(), 1000);
+    }
+}
+
+// Sistema de Stamina
+let currentStamina = 100;
+let maxStamina = 100;
+let isRegeneratingStamina = false;
+
+function updateStamina(amount) {
+    currentStamina = Math.max(0, Math.min(maxStamina, currentStamina + amount));
+    const staminaBar = document.getElementById('playerStaminaBar');
+    staminaBar.style.width = `${(currentStamina / maxStamina) * 100}%`;
+    
+    // Atualiza o texto
+    document.getElementById('playerDetailedStamina').textContent = Math.floor(currentStamina);
+    
+    // Gerencia a regeneração
+    if (currentStamina < maxStamina && !isRegeneratingStamina) {
+        startStaminaRegeneration();
+    }
+}
+
+function startStaminaRegeneration() {
+    isRegeneratingStamina = true;
+    const regenEffect = document.querySelector('.stamina-regen-effect');
+    regenEffect.classList.add('active');
+    
+    const regenInterval = setInterval(() => {
+        if (currentStamina < maxStamina) {
+            updateStamina(1); // Regenera 1 ponto por tick
+        } else {
+            clearInterval(regenInterval);
+            isRegeneratingStamina = false;
+            regenEffect.classList.remove('active');
+        }
+    }, 100); // Regenera a cada 100ms
+}
+
+// Sistema de Runas
+let runes = 0;
+
+function updateRunes(amount) {
+    runes += amount;
+    document.getElementById('runesAmount').textContent = runes.toLocaleString();
+}
+
+// Sistema de Status
+const statusEffects = {
+    poison: { icon: 'img/poison-icon.png', duration: 10000 },
+    bleed: { icon: 'img/bleed-icon.png', duration: 5000 },
+    buff: { icon: 'img/buff-icon.png', duration: 15000 }
+};
+
+function addStatusEffect(effectType) {
+    const statusSlot = document.querySelector('.status-slot:empty');
+    if (statusSlot) {
+        const effect = statusEffects[effectType];
+        if (effect) {
+            const img = document.createElement('img');
+            img.src = effect.icon;
+            img.alt = effectType;
+            statusSlot.appendChild(img);
+            statusSlot.classList.add('active');
+            
+            // Remove o efeito após a duração
+            setTimeout(() => {
+                statusSlot.innerHTML = '';
+                statusSlot.classList.remove('active');
+            }, effect.duration);
+        }
+    }
+}
+
+// Event Listeners
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'h') { // Tecla H para usar Estus
+        useEstus();
+    }
+    if (e.key === 'Shift') { // Shift para correr (consome stamina)
+        if (currentStamina >= 10) {
+            updateStamina(-10);
+        }
+    }
+});
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+    updateRunes(0); // Inicializa o contador de runas
+    updateStamina(0); // Inicializa a barra de stamina
+});
+
+// --- Lógica de Cenas e Escolhas (Game Flow) ---
+
+const gameScenes = {
+    'cemiterio_inicio': {
+        background: 'img/cemiterio.jpg',
+        text: 'Você acorda em um cemitério à deriva, a névoa densa envolve as lápides quebradas e a luz fraca da lua mal consegue penetrar. A brisa gélida sussurra segredos antigos enquanto a igreja em ruínas se ergue sombria à sua frente.',
+        choices: [
+            { text: 'Entrar na igreja', nextSceneId: 'igreja_interior' },
+            { text: 'Caminhar em direção à estátua', nextSceneId: 'estatua' }
+        ]
+    },
+    'estatua': {
+        background: 'img/cemiterio.jpg',
+        text: 'Você se arrasta entre as lápides em direção à estátua. Ela se ergue majestosa, uma figura de um antigo guerreiro com a cabeça baixa, parecendo lamentar um passado distante. Ao seu redor, a névoa parece se adensar ainda mais.',
+        choices: [
+            { text: 'Tentar interagir com a estátua', nextSceneId: 'interagir_estatua' },
+            { text: 'Retornar à igreja', nextSceneId: 'cemiterio_inicio' }
+        ]
+    },
+    'igreja_interior': {
+        background: 'scn/igreja_interior.webp', // Supondo uma imagem para o interior da igreja
+        text: 'Dentro da igreja, o cheiro de mofo e desolação é sufocante. Velas derretidas jazem no chão, e o silêncio é quebrado apenas pelo gotejar constante de água do teto. Você sente uma presença... o que fazer?',
+        choices: [
+            { text: 'Explorar o altar', nextSceneId: 'explorar_altar' },
+            { text: 'Sair da igreja', nextSceneId: 'cemiterio_inicio' }
+        ]
+    },
+    'interagir_estatua': {
+        background: 'scn/cemiterio1.jpg',
+        text: 'Você toca a superfície fria da estátua. Uma sensação de poder antigo irradia, mas nada acontece. Talvez ainda não seja o momento...',
+        choices: [
+            { text: 'Voltar', nextSceneId: 'estatua' }
+        ]
+    },
+    'explorar_altar': {
+        background: 'scn/igreja_interior.webp',
+        text: 'Ao se aproximar do altar, você percebe runas gravadas na pedra. Elas brilham fracamente. Você sente uma conexão com o passado. Talvez haja algo mais aqui.',
+        choices: [
+            { text: 'Investigar as runas', nextSceneId: 'investigar_runas' },
+            { text: 'Retornar à entrada', nextSceneId: 'igreja_interior' }
+        ]
+    },
+    'investigar_runas': {
+        background: 'scn/igreja_interior.webp',
+        text: 'As runas reagem ao seu toque, e uma luz forte emerge do altar. Você sente seu corpo ser preenchido com um novo poder. Você encontrou algo!',
+        choices: [
+            { text: 'Continuar jornada (Início do Gameplay)', action: 'start_gameplay' }
+        ],
+        gameplayBackground: 'scn/igreja_interior_gameplay.webp' // Nova imagem de fundo para o gameplay
+    }
+    // Adicione mais cenas conforme necessário
+};
+
+function loadScene(sceneId) {
+    const scene = gameScenes[sceneId];
+    if (!scene) {
+        console.error('Cena não encontrada:', sceneId);
+        return;
+    }
+
+    // Atualiza a imagem de fundo com transição
+    sceneBackground.style.backgroundImage = `url('${scene.background}')`;
+    
+    // Atualiza o texto da cena
+    sceneTextElement.textContent = scene.text;
+
+    // Limpa e renderiza as escolhas
+    sceneChoicesContainer.innerHTML = '';
+    scene.choices.forEach(choice => {
+        const button = document.createElement('button');
+        button.classList.add('choice-button');
+        button.textContent = choice.text;
+        button.addEventListener('click', () => handleChoice(choice));
+        sceneChoicesContainer.appendChild(button);
+    });
+
+    // Garante que a seção de apresentação esteja visível
+    scenePresentationSection.classList.add('active');
+    gamePlaySection.style.display = 'none'; // Garante que o gameplay esteja oculto
+    characterCreationSection.style.display = 'none';
+    cutsceneSection.style.display = 'none';
+}
+
+function handleChoice(choice) {
+    if (choice.action === 'start_gameplay') {
+        // Transição para a seção de gameplay
+        scenePresentationSection.classList.remove('active');
+        setTimeout(() => {
+            scenePresentationSection.style.display = 'none';
+            gamePlaySection.style.display = 'flex';
+            // Aqui você pode inicializar o estado do jogador e a HUD
+            displayPlayerClass.textContent = selectedClass ? selectedClass.toUpperCase() : 'VAGABOND'; // Default se não houver criação
+            displayPlayerName.textContent = characterNameInput.value.trim() || 'Tarnished';
+            playerImage.src = classImages[selectedClass || 'vagabond'];
+            playerFullBodyImage.src = classImagesFullBody[selectedClass || 'vagabond'];
+            updateRunes(0); // Inicializa runas
+            updateStamina(0); // Inicializa stamina
+            // Efeito inicial para as barras
+            document.getElementById('playerHealthBar').style.width = '100%';
+            document.getElementById('playerManaBar').style.width = '100%';
+            document.getElementById('playerStaminaBar').style.width = '100%';
+            document.getElementById('playerDetailedHP').textContent = '100';
+            document.getElementById('playerDetailedMana').textContent = '100';
+            document.getElementById('playerDetailedStamina').textContent = '100';
+            document.getElementById('playerDetailedLevel').textContent = '1';
+
+            // Define o wallpaper do gameplay baseado na cena atual
+            if (gameScenes[currentSceneId] && gameScenes[currentSceneId].gameplayBackground) {
+                gamePlaySection.style.backgroundImage = `url('${gameScenes[currentSceneId].gameplayBackground}')`;
+                gamePlaySection.style.backgroundSize = 'cover';
+                gamePlaySection.style.backgroundPosition = 'center';
+                gamePlaySection.style.backgroundRepeat = 'no-repeat';
+            }
+
+            // Remover os listeners de escolha para evitar múltiplos disparos
+            sceneChoicesContainer.innerHTML = '';
+        }, 1500); // Tempo para o fade out da cena
+    } else {
+        currentSceneId = choice.nextSceneId; // Atualiza o ID da cena atual
+        loadScene(currentSceneId);
+    }
+}
+
+let currentSceneId = 'cemiterio_inicio'; // Variável para rastrear a cena atual
+
+// Ajuste na inicialização para começar com a cena
+document.addEventListener('DOMContentLoaded', () => {
+    loadScene(currentSceneId);
+    // Remova ou comente as chamadas para startGameButton e loadGameSection que não serão mais o início
+    // handleOptionSelection e os listeners de botões de criação/carregamento ainda podem ser úteis para outras partes do jogo, se for o caso.
+
+    // Certifique-se de que a cutscene e a seção de criação de personagem estão ocultas no início.
+    characterCreationSection.style.display = 'none';
+    cutsceneSection.style.display = 'none';
+    gamePlaySection.style.display = 'none';
 }); 
