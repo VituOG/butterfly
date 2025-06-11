@@ -443,7 +443,7 @@ const gameScenes = {
         ]
     },
     'interagir_estatua': {
-        background: 'scn/cemiterio1.jpg',
+        background: 'img/cemiterio.jpg',
         text: 'Você toca a superfície fria da estátua. Uma sensação de poder antigo irradia, mas nada acontece. Talvez ainda não seja o momento...',
         choices: [
             { text: 'Voltar', nextSceneId: 'estatua' }
