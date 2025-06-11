@@ -267,54 +267,74 @@ function initGameElements() {
 // --- Lógica de Cenas e Escolhas (Game Flow) ---
 
 const gameScenes = {
-    'cemiterio_inicio': {
-        background: 'img/cemiterio.jpg',
-        text: 'Você acorda em um cemitério à deriva, a névoa densa envolve as lápides quebradas e a luz fraca da lua mal consegue penetrar. A brisa gélida sussurra segredos antigos enquanto a igreja em ruínas se ergue sombria à sua frente.',
+    cemiterio_inicio: {
+        text: "VOCÊ ACORDA EM UM CEMITÉRIO À DERIVA. A NÉVOA DENSA ENVOLVE AS LÁPIDES QUEBRADAS E A LUZ FRACA DA LUA MAL CONSEGUE PENETRAR. A BRISA GÉLIDA SUSURRA SEGREDOS ANTIGOS ENQUANTO A IGREJA EM RUÍNAS SE ERGUE SOMBRIA À SUA FRENTE.",
         choices: [
-            { text: 'Entrar na igreja', nextSceneId: 'igreja_interior' },
-            { text: 'Caminhar em direção à estátua', nextSceneId: 'estatua' }
-        ]
-    },
-    'estatua': {
-        background: 'scn/cemiterio1.jpg',
-        text: 'Você se arrasta entre as lápides em direção à estátua. Ela se ergue majestosa, uma figura de um antigo guerreiro com a cabeça baixa, parecendo lamentar um passado distante. Ao seu redor, a névoa parece se adensar ainda mais.',
-        choices: [
-            { text: 'Tentar interagir com a estátua', nextSceneId: 'interagir_estatua' },
-            { text: 'Retornar à igreja', nextSceneId: 'cemiterio_inicio' }
-        ]
-    },
-    'igreja_interior': {
-        background: 'scn/igreja_interior.webp', // Supondo uma imagem para o interior da igreja
-        text: 'Dentro da igreja, o cheiro de mofo e desolação é sufocante. Velas derretidas jazem no chão, e o silêncio é quebrado apenas pelo gotejar constante de água do teto. Você sente uma presença... o que fazer?',
-        choices: [
-            { text: 'Explorar o altar', nextSceneId: 'explorar_altar' },
-            { text: 'Sair da igreja', nextSceneId: 'cemiterio_inicio' }
-        ]
-    },
-    'interagir_estatua': {
-        background: 'scn/cemiterio1.jpg',
-        text: 'Você toca a superfície fria da estátua. Uma sensação de poder antigo irradia, mas nada acontece. Talvez ainda não seja o momento...',
-        choices: [
-            { text: 'Voltar', nextSceneId: 'estatua' }
-        ]
-    },
-    'explorar_altar': {
-        background: 'scn/igreja_interior.webp',
-        text: 'Ao se aproximar do altar, você percebe runas gravadas na pedra. Elas brilham fracamente. Você sente uma conexão com o passado. Talvez haja algo mais aqui.',
-        choices: [
-            { text: 'Investigar as runas', nextSceneId: 'investigar_runas' },
-            { text: 'Retornar à entrada', nextSceneId: 'igreja_interior' }
-        ]
-    },
-    'investigar_runas': {
-        background: 'scn/igreja_interior.webp',
-        text: 'As runas reagem ao seu toque, e uma luz forte emerge do altar. Você sente seu corpo ser preenchido com um novo poder. Você encontrou algo!',
-        choices: [
-            { text: 'Continuar jornada (Início do Gameplay)', action: 'start_gameplay' }
+            { text: "ENTRAR NA IGREJA", nextScene: "igreja_interior" },
+            { text: "CAMINHAR EM DIREÇÃO À ESTÁTUA", nextScene: "estatua_cemiterio" }
         ],
-        gameplayBackground: 'scn/igreja_interior_gameplay.webp' // Nova imagem de fundo para o gameplay
+        gameplayBackground: 'img/cemiterio.jpg',
+        playerImage: 'img/samurai.jpg',
+        enemyImage: null
+    },
+    igreja_interior: {
+        text: "Você entra na igreja em ruínas. A poeira paira no ar, e o eco de seus passos reverbera nos vitrais quebrados. Um altar decrépito se ergue no centro, iluminado por uma fraca luz vinda do teto desabado.",
+        choices: [
+            { text: "EXAMINAR O ALTAR", nextScene: "altar_igreja" },
+            { text: "VOLTAR AO CEMITÉRIO", nextScene: "cemiterio_inicio" }
+        ],
+        gameplayBackground: 'iconimg/interior-igreja.jpg',
+        playerImage: 'img/samurai.jpg',
+        enemyImage: null
+    },
+    estatua_cemiterio: {
+        text: "Você se aproxima de uma estátua antiga, corroída pelo tempo e coberta de musgo. Seus traços são indecifráveis, mas uma aura de mistério a envolve.",
+        choices: [
+            { text: "TOCAR NA ESTÁTUA", nextScene: "estatua_toque" },
+            { text: "VOLTAR AO CEMITÉRIO", nextScene: "cemiterio_inicio" }
+        ],
+        gameplayBackground: 'img/cemiterio.jpg',
+        playerImage: 'img/samurai.jpg',
+        enemyImage: null
+    },
+    altar_igreja: {
+        text: "O altar está coberto de símbolos antigos e velas apagadas. Parece ter sido usado para rituais sombrios. Há algo escondido sob os escombros.",
+        choices: [
+            { text: "PEGAR O ITEM", nextScene: "item_encontrado" },
+            { text: "VOLTAR PARA IGREJA", nextScene: "igreja_interior" }
+        ],
+        gameplayBackground: 'iconimg/interior-igreja.jpg',
+        playerImage: 'img/samurai.jpg',
+        enemyImage: null
+    },
+    item_encontrado: {
+        text: "Você encontrou um Amuleto Amaldiçoado. Seus olhos sentem uma leve tontura ao olhar para ele. Seus Runes aumentaram em 50.",
+        choices: [
+            { text: "CONTINUAR", nextScene: "igreja_interior" }
+        ],
+        gameplayBackground: 'iconimg/interior-igreja.jpg',
+        onEnter: (player) => {
+            player.runes += 50;
+            updateRunes(player.runes);
+        },
+        playerImage: 'img/samurai.jpg',
+        enemyImage: null
+    },
+    estatua_toque: {
+        text: "Ao tocar na estátua, uma energia antiga flui através de você, preenchendo-o com vitalidade. Sua vida e mana foram restauradas.",
+        choices: [
+            { text: "CONTINUAR", nextScene: "cemiterio_inicio" }
+        ],
+        gameplayBackground: 'img/cemiterio.jpg',
+        onEnter: (player) => {
+            player.health = player.maxHealth;
+            player.mana = player.maxMana;
+            updateHealthBar(player.health);
+            updateManaBar(player.mana);
+        },
+        playerImage: 'img/samurai.jpg',
+        enemyImage: null
     }
-    // Adicione mais cenas conforme necessário
 };
 
 async function typeText(element, text) {
