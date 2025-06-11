@@ -384,35 +384,68 @@ async function typeText(element, text) {
 async function loadScene(sceneId) {
     const scene = gameScenes[sceneId];
     if (!scene) {
-        console.error('Cena não encontrada:', sceneId);
+        console.error(`Cena não encontrada: ${sceneId}`);
         return;
     }
 
+    currentSceneId = sceneId;
+
     // Atualiza a imagem de fundo da caixa de cena
-    sceneBackground.style.backgroundImage = `url('${scene.gameplayBackground}')`;
-    console.log(`Setting scene background to: ${scene.gameplayBackground}`); // Debug log
-    
+    if (sceneBackground) {
+        sceneBackground.style.backgroundImage = ''; // Limpa a imagem anterior
+        // Adiciona um pequeno atraso para garantir que a imagem anterior seja limpa antes de carregar a nova
+        await new Promise(resolve => setTimeout(resolve, 50)); 
+        sceneBackground.style.backgroundImage = `url('${scene.gameplayBackground}')`;
+        console.log(`Setting scene background to: ${scene.gameplayBackground}`); // Debug log
+    }
+
+    // Atualiza o texto da cena
+    sceneTextElement.textContent = ''; // Limpa o texto anterior
+    sceneTextElement.style.width = ''; // Limpa a largura para o efeito de digitação
+    sceneTextElement.style.borderRight = '.15em solid orange'; // Restaura o cursor
+    typeText(sceneTextElement, scene.text);
+
     // Esconde as escolhas enquanto o texto é digitado
     sceneChoicesContainer.style.display = 'none';
-    sceneTextElement.textContent = ''; // Limpa o texto antes de digitar
 
-    // Garante que a overlay da cena esteja visível
-    scenePresentationOverlay.classList.remove('hidden');
-    scenePresentationOverlay.style.pointerEvents = 'all'; // Permite cliques na overlay
+    // Remove escolhas antigas
+    sceneChoicesContainer.innerHTML = '';
 
-    // Espera a digitação do texto terminar
-    await typeText(sceneTextElement, scene.text);
-
-    // Após o texto ser digitado, exibe as escolhas
-    sceneChoicesContainer.innerHTML = ''; // Limpa e renderiza as escolhas
+    // Renderiza novas escolhas após o texto ser digitado
     scene.choices.forEach(choice => {
         const button = document.createElement('button');
-        button.classList.add('choice-button');
+        button.className = 'choice-button';
         button.textContent = choice.text;
         button.addEventListener('click', () => handleChoice(choice));
         sceneChoicesContainer.appendChild(button);
     });
-    sceneChoicesContainer.style.display = 'flex'; // Exibe as escolhas
+
+    // Executa a função onEnter da cena, se existir
+    if (scene.onEnter && currentPlayer) {
+        scene.onEnter(currentPlayer);
+    }
+
+    // Atualiza a imagem do jogador (se aplicável à cena)
+    if (scene.playerImage && playerImage) {
+        playerImage.src = scene.playerImage;
+        playerImage.style.display = 'block'; // Garante que a imagem do jogador esteja visível
+    } else if (playerImage) {
+        playerImage.style.display = 'none'; // Esconde se não houver imagem do jogador para a cena
+    }
+
+    // Atualiza a imagem do inimigo (se aplicável à cena)
+    if (scene.enemyImage && enemyContainer) {
+        enemyContainer.innerHTML = ''; // Limpa inimigos anteriores
+        spawnEnemy('generic', 0, 0); // Exemplo: um inimigo genérico na posição (0,0)
+        // Lógica mais complexa para spawn de inimigos reais
+        // enemyImage.src = scene.enemyImage;
+        // enemyImage.style.display = 'block';
+        // document.querySelector('.enemy-info-section').style.display = 'flex';
+    } else if (enemyContainer) {
+        enemyContainer.innerHTML = ''; // Limpa inimigos
+        // enemyImage.style.display = 'none';
+        // document.querySelector('.enemy-info-section').style.display = 'none';
+    }
 }
 
 async function handleChoice(choice) {
