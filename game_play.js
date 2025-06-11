@@ -389,7 +389,8 @@ async function loadScene(sceneId) {
     }
 
     // Atualiza a imagem de fundo da caixa de cena
-    sceneBackground.style.backgroundImage = `url('${scene.background}')`;
+    sceneBackground.style.backgroundImage = `url('${scene.gameplayBackground}')`;
+    console.log(`Setting scene background to: ${scene.gameplayBackground}`); // Debug log
     
     // Esconde as escolhas enquanto o texto é digitado
     sceneChoicesContainer.style.display = 'none';

@@ -615,8 +615,9 @@ h2 {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    z-index: 1; /* Abaixo do texto e das escolhas */
+    z-index: 1;
     background-color: transparent;
+    border: 2px solid blue; /* Borda temporária para depuração */
 }
 
 .scene-box .scene-overlay {
